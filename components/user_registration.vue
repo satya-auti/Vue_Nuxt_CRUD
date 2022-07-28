@@ -130,6 +130,7 @@ export default {
         
         return{
             isEdit: false,
+            indexEdit : -1,
             // index: index + 1,
             allUserData : [],
             // i : 0,
@@ -147,7 +148,22 @@ export default {
         submitUserForm(event){
             event.preventDefault(event);
             console.log(this.userData);
-            this.allUserData.push(this.userData);
+            // this.allUserData.push(this.userData);
+
+            if(this.isEdit===true){
+                this.allUserData[this.indexEdit]=this.userData;
+                this.isEdit=true;
+                this.indexEdit = -1;
+
+                // this.allUserData[index-1].firstName = this.userData.firstName ;
+                // this.allUserData[index-1].lastName = this.userData.lastName ;
+                // this.allUserData[index-1].email = this.userData.email ;
+                // this.allUserData[index-1].dob = this.userData.dob ;
+            }else{
+                // alert("unable to update");
+                this.allUserData.push(this.userData);
+            }
+
             this.userData = {firstName:'', lastName:'', email:'', dob:''};
             console.log(" User Form Values", this.allUserData);
             const myButton = document.getElementById('submit');
@@ -164,14 +180,9 @@ export default {
             const myButton = document.getElementById('submit');
             myButton.innerText = 'Update';
             this.isEdit=true;
-            if(isEdit==true){
-                this.allUserData[index-1].firstName = this.userData.firstName ;
-                this.allUserData[index-1].lastName = this.userData.lastName ;
-                this.allUserData[index-1].email = this.userData.email ;
-                this.allUserData[index-1].dob = this.userData.dob ;
-            }else{
-                alert("unable to update");
-            }
+            this.indexEdit = index-1;
+
+            
             // this.submitUserForm();
         },
         deleteUser(index){
