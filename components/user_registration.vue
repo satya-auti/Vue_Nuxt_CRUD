@@ -56,8 +56,8 @@
 
                         </td>
                         <td>
-                            <button class="bg-blue-600 hover:bg-blue-800 text-white px-2 p-1 mr-2 rounded-xl" type="submit">Submit</button>
-                            <button class="bg-blue-600 hover:bg-red-600 text-white px-2 py-1 mr-2 rounded-xl" type="reset">Reset</button>
+                            <button class="bg-blue-600 hover:bg-blue-800 text-white px-2 p-1 mr-2 rounded-xl" id="submit" type="submit">Submit</button>
+                            <button @click="resetForm" class="bg-blue-600 hover:bg-red-600 text-white px-2 py-1 mr-2 rounded-xl" type="reset">Reset</button>
                         </td>
                     </tr>
                 </table>
@@ -74,6 +74,9 @@
             <table class="border-2 border-black">
                 <tr >
                     <th class="border-2 border-black">
+                        ID
+                    </th>
+                    <th class="border-2 border-black">
                         First Name
                     </th>
                     <th class="border-2 border-black">
@@ -85,11 +88,14 @@
                     <th class="border-2 border-black">
                         Date of Birth
                     </th>
-                    <th colspan="2" class="border-2 border-black">
+                    <th colspan="2">
                         Action
                     </th>
                 </tr>
-                <tr v-for="user in allUserData" :key="user">
+                <tr v-for="(user, index) in allUserData" :key="user">
+                    <td class="border-2 border-black">
+                        {{user.id = index + 1}}
+                    </td>
                     <td class="border-2 border-black">
                         {{user.firstName}}
                     </td>
@@ -103,10 +109,10 @@
                         {{user.dob}}
                     </td>
                     <td class="border-2 border-black">
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 mr-2 rounded-xl" type="button">Edit</button>
+                        <button @click="onEdit(user.id)" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 mr-2 rounded-xl" type="button">Edit</button>
                     </td>
                     <td class="border-2 border-black">
-                        <button class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 mr-2 rounded-xl" type="button">Delete</button>
+                        <button  @click="deleteUser(user.id)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 mr-2 rounded-xl" type="button">Delete</button>
                     </td>
                 </tr>
             </table>
@@ -121,10 +127,15 @@
 
 export default {
     data(){
+        
         return{
+            isEdit: false,
+            // index: index + 1,
             allUserData : [],
+            // i : 0,
             // show : false,
             userData : {
+                id:0,
                 firstName : '',
                 lastName : '',
                 email : '',
@@ -134,17 +145,48 @@ export default {
     },
     methods: {
         submitUserForm(event){
-            event.preventDefault();
+            event.preventDefault(event);
             console.log(this.userData);
             this.allUserData.push(this.userData);
             this.userData = {firstName:'', lastName:'', email:'', dob:''};
             console.log(" User Form Values", this.allUserData);
+            const myButton = document.getElementById('submit');
+            myButton.innerText = 'Submit';
         },
-        showData(){
-            //  this.show = true;
-            // this.allUserData;
-            // this.allUserData.push(this.userData);
-            // console.log(" User Form Values", this.allUserData);
+        onEdit(index){
+            console.log(this.allUserData[index]);
+            // console.log(this.allUserData[this.index]);
+            this.userData.firstName = this.allUserData[index-1].firstName;
+            this.userData.lastName = this.allUserData[index-1].lastName;
+            this.userData.email = this.allUserData[index-1].email;
+            this.userData.dob = this.allUserData[index-1].dob;
+
+            const myButton = document.getElementById('submit');
+            myButton.innerText = 'Update';
+            this.isEdit=true;
+            if(isEdit==true){
+                this.allUserData[index-1].firstName = this.userData.firstName ;
+                this.allUserData[index-1].lastName = this.userData.lastName ;
+                this.allUserData[index-1].email = this.userData.email ;
+                this.allUserData[index-1].dob = this.userData.dob ;
+            }else{
+                alert("unable to update");
+            }
+            // this.submitUserForm();
+        },
+        deleteUser(index){
+            console.log(index-1);
+            this. allUserData.splice(index-1, 1);
+            const myButton = document.getElementById('submit');
+            myButton.innerText = 'Submit';
+        },  
+        resetForm() {
+            console.log("reset call");
+            const myButton = document.getElementById('submit');
+            myButton.innerText = 'Submit';
+            // indexOfEdit=-1;
+            this.isEdit=false;
+            this.userData = {id:'', firstName:'', lastName:'', email:'', dob:''};
         },
     }
 }
